@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withFormik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 
-function SmurfForm({ values, errors, touched, isSubmitting }) {
+import { postSmurf } from '../../actions';
+
+function SmurfForm({ errors, touched, isSubmitting }) {
     return (
         <div className="login-form">
             <Form>
@@ -19,7 +21,7 @@ function SmurfForm({ values, errors, touched, isSubmitting }) {
                         {touched.age && errors.age && <span style={{ color: 'red' }}>{errors.age}</span>}
                     </label>
                     <label>
-                        Name:
+                        Height:
                         <Field name="height" type="text" placeholder="Height" />
                         {touched.height && errors.height && <span style={{ color: 'red' }}>{errors.height}</span>}
                     </label>
@@ -45,19 +47,12 @@ const FormikSmurfForm = withFormik({
         age: Yup.number().required('Age is required'),
         height: Yup.string().required('Height is required')
     }),
-    handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
-        axios
-            .post('http://localhost:3333/smurfs', values)
-            .then(res => {
-                console.log(res); // Data was created successfully and logs to console
-                resetForm();
-                setSubmitting(false);
-            })
-            .catch(err => {
-                console.log(err); // There was an error creating the data and logs to console
-                setSubmitting(false);
-            });
+    handleSubmit(values, { props, resetForm, setSubmitting }) {
+        props.postSmurf(values, resetForm, setSubmitting);
     }
 })(SmurfForm);
 
-export default FormikSmurfForm;
+export default connect(
+    null,
+    { postSmurf }
+)(FormikSmurfForm);

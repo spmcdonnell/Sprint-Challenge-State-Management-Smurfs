@@ -1,4 +1,4 @@
-import { API_CALL_START, API_CALL_SUCCESS, API_CALL_FAILURE } from '../actions';
+import { API_CALL_START, API_CALL_SUCCESS, API_CALL_FAILURE, POST_START, POST_SUCCESS, POST_FAILURE } from '../actions';
 
 export const initialState = {
     smurfs: [],
@@ -21,6 +21,23 @@ function reducer(state = initialState, action) {
                 error: ''
             };
         case API_CALL_FAILURE:
+            return {
+                ...state,
+                error: action.payload
+            };
+        case POST_START:
+            return {
+                ...state,
+                isLoading: true,
+                error: ''
+            };
+        case POST_SUCCESS:
+            return {
+                smurfs: action.payload,
+                isLoading: false,
+                error: ''
+            };
+        case POST_FAILURE:
             return {
                 ...state,
                 error: action.payload
